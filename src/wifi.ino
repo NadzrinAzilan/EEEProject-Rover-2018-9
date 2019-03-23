@@ -1,12 +1,13 @@
 #include "wifi_conf.h"
 #include "time.h"
+#include "wifi2.h"
 
 int status = WL_IDLE_STATUS;
 
 WiFiServer server(ip_port);
 
 /* Forward declaration */
-static void printWiFiStatus();
+void printWiFiStatus();
 
 unsigned int getWIFI_ID(){
   unsigned int res = 0;
@@ -98,7 +99,7 @@ bool setupWiFi() {
   }
 
 
-  static void printWiFiStatus() {
+void printWiFiStatus() {
     Log("SSID: ");
     Logln(WiFi.SSID());
 
@@ -112,7 +113,7 @@ bool setupWiFi() {
     Logln(" dBm");
 }
 
-static unsigned int sendToClient(WiFiClient* client, const char text[]){
+unsigned int sendToClient(WiFiClient* client, const char text[]){
     unsigned int i;
 	/* Get the index of null-terminating character */
     for(i = 0; i < MAX_CHAR_ARRAY; i++)
@@ -124,7 +125,7 @@ static unsigned int sendToClient(WiFiClient* client, const char text[]){
 	/* Use overloaded function with proper data length n */
     return sendToClient(client, text, i);
 }
-static unsigned int sendToClient(WiFiClient* client, const char text[], unsigned int n){
+unsigned int sendToClient(WiFiClient* client, const char text[], unsigned int n){
     if(text[n - 1] == 0) { /* Check again to prevent overflow to invalid memory */
 		unsigned int i = 0;
 		
@@ -136,6 +137,7 @@ static unsigned int sendToClient(WiFiClient* client, const char text[], unsigned
     }
     return 0; /* text array are not null-terminated */
 }
-static unsigned int sendToClient(WiFiClient* client, String s){
+unsigned int sendToClient(WiFiClient* client, String s){
 	return client->write(s.c_str(),s.length());
 }
+

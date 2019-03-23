@@ -35,7 +35,7 @@ unsigned int readInfraredSensors(){
 
 unsigned long readRadioSensors(){
 	//Don't want the rover to be moving when sampling
-	wheel_stop_all();
+	wheel_stop(true, true);
 
 	unsigned long time_sample = 300000; //100'000 microseconds = 0.1 s
 	char c[4] = {0}; unsigned int i = 0;
@@ -72,3 +72,4 @@ unsigned long readRadioSensors(){
 	//format of output is 4 characters in base 256
 	return sensor_radio = c[0]+c[1]*(256ul)+c[2]*(256ul*256ul)+c[3]*(256ul*256ul*256ul);
 }
+

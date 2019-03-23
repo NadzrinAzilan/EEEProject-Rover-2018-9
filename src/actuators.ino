@@ -18,7 +18,7 @@ void setup_PWM(){
 
 	set_wheel_direction(WHEEL_SIDE::LEFT, WHEEL_DIRECTION::FORWARD);
 	set_wheel_direction(WHEEL_SIDE::RIGHT, WHEEL_DIRECTION::FORWARD);
-	wheel_stop_all();
+	wheel_stop(true, true);
 }
 
 inline unsigned int scale_wheel_speed(unsigned int x){
@@ -67,7 +67,8 @@ void wheel_moveBackwardWithPeriod(WHEEL_SIDE w, unsigned int x){
 }
 /* Function to stop the wheel after a period of time passed */
 void wheel_move_stop_callback(){
-	for(unsigned int i = 0; i < 2; stopWheel[i]=false, i++) if(stopWheel[i]) wheel_stop(i);
+  wheel_stop(stopWheel[0], stopWheel[1]);
+  stopWheel[0] = stopWheel[1] = false;
 }
 void wheel_change_speed(unsigned int xl, unsigned int xr){
 	xl = scale(xl, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE + 1);
@@ -89,11 +90,11 @@ void wheel_change_speed(unsigned int xl, unsigned int xr){
 /* Functions related to joystick operation */
 
 void wheel_joystick(unsigned long n){
-	int x_dir = (n/10'000'000)    >0 ?-1:1,
-		y_dir = (n/1'000'000 )%10 >0 ?-1:1;
+	int x_dir = (n/10000000)    >0 ?-1:1,
+		y_dir = (n/1000000 )%10 >0 ?-1:1;
 		
 	/* remove direction digits and get last 6 digits */
-	n %= 1'000'000;
+	n %= 1000000;
 	
 	/* Combine the signs to the extracted values */
 	int x_mag = x_dir*(n/1000),
@@ -136,3 +137,4 @@ void wheel_stop(bool left, bool right){
 		wheel_move(WHEEL_SIDE::LEFT,LOW_SPEED_PWM_VALUE);
 	}
 }
+

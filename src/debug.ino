@@ -100,3 +100,4 @@ void resetLOG(){
     memset(_log_diag,0, log_cur_index);
     log_cur_index = 0;
 }
+

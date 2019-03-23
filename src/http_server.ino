@@ -1,6 +1,7 @@
 #include "comms.h"
 #include "time.h"
 #include "HTTP_content.h"
+#include "wifi2.h"
 
 unsigned char timer_id = 0;
 COMMANDS_LIST mapToCommand[255] = {COMMANDS_LIST::INVALID};
@@ -40,7 +41,7 @@ void setupHTTPServer(){
     mapToCommand['a'] = COMMANDS_LIST::GET_ACOUSTIC;
 
 	/* Start listening for connections for every 50ms */
-    timer_id = registerTimerWithCallback(50'000ul, checkForIncomingRequest, true);
+    timer_id = registerTimerWithCallback(50000ul, checkForIncomingRequest, true);
 }
 
 void closeHTTPServer(){
@@ -57,9 +58,9 @@ void checkForIncomingRequest() {
         client.setTimeout(MAX_TIME_CLIENT/1000);
         String currentLine =  "";
         bool currentLineIsBlank = true;
-        char cc[sizeof HTTP_HEADER_CONTENT_SEPERATOR] = {0}, auth[sizeof pass_auth] = {0} = args[HTTP_HEADER_MAX_CHAR] = {0};
+        char cc[sizeof HTTP_HEADER_CONTENT_SEPERATOR] = {0}, auth[sizeof pass_auth] = {0}, args[HTTP_HEADER_MAX_CHAR] = {0};
         unsigned int tmp = 0;
-		COMMANDS_LIST c;
+		    COMMANDS_LIST c;
 		
         unsigned long time_client = micros();
         while (client.connected() && micros() - time_client < MAX_TIME_CLIENT) {
@@ -71,7 +72,7 @@ void checkForIncomingRequest() {
 					currentLine += cc[(sizeof cc) - 2]; /* letter read is not newline char, thus add to currentLine */
                 else {
 					tmp = parseHTTPRequest(currentLine, &c, &(args[0]), sizeof args, &(auth[0]), sizeof auth);
-					
+          
 					if(strncmp(pass_auth, auth, sizeof(pass_auth)-1) == 0 || c == COMMANDS_LIST::GET_HOMEPAGE || c == COMMANDS_LIST::INVALID)
 						ExecuteACommand(&client, c, &(args[0]), tmp);
 					else
@@ -145,3 +146,4 @@ unsigned int parseHTTPRequest(String t, COMMANDS_LIST* c, char *args, unsigned i
     delete[] currentRequest.ABS_PATH;                           /* Delete all allocation using new[] */
     return size+1;                                              /* Return size of argument */
 }
+

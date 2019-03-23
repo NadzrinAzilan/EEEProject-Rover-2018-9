@@ -74,7 +74,7 @@ void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned i
             sendToClient(client, tmp);
             break;
         case COMMANDS_LIST::CHANGE_SPEED_ALL:
-            wheel_changeAllSpeed(atoi(args));
+            wheel_change_speed((unsigned int)atoi(args), (unsigned int)atoi(args));
             sendToClient(client, tmp);
             break;
         case COMMANDS_LIST::SET_DIRECTION:
@@ -101,10 +101,13 @@ void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned i
             sendToClient(client, tmp);
             break;
 			
-		/* Return 404 page for invalid code */
+        /* Return 404 page for invalid code */
         case COMMANDS_LIST::INVALID:
-		default:
-			sendToClient(client, HTTP_404_RESPONSE, sizeof HTTP_404_RESPONSE);
-			break;
+            sendToClient(client, HTTP_404_RESPONSE, sizeof HTTP_404_RESPONSE);
+            break;
+    		default:
+      			sendToClient(client, HTTP_404_RESPONSE, sizeof HTTP_404_RESPONSE);
+      			break;
     }
 }
+

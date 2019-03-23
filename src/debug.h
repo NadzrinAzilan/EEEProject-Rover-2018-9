@@ -19,3 +19,4 @@ extern unsigned int log_cur_index;
 void resetLOG();
 
 #endif
+

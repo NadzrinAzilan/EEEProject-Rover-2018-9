@@ -45,6 +45,7 @@ void ExecuteACommand(WiFiClient*,COMMANDS_LIST,char*,unsigned int);
 void setupHTTPServer();
 void closeHTTPServer();
 const unsigned char MAX_CLIENT_PER_SESSION = 3;
-const unsigned long MAX_TIME_CLIENT = 5'000'000ul; /* 5s in us */
+const unsigned long MAX_TIME_CLIENT = 5000000ul; /* 5s in us */
 
 #endif
+
