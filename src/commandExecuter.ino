@@ -2,6 +2,7 @@
 #include "actuators.h"
 #include "sensors.h"
 #include "HTTP_content.h"
+#include "sensor_movement.h"
 
 void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned int args_n){
     String tmp = HTTP_STD_RESPONSE;
@@ -81,6 +82,12 @@ void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned i
             args[8] = 0;
             wheel_joystick(atol(args));
             sendToClient(client, tmp);
+            break;
+        case COMMANDS_LIST::SENSOR_M_CW:
+            sensor_m_cw();
+            break;
+        case COMMANDS_LIST::SENSOR_M_CCW:
+            sensor_m_ccw();
             break;
 
         //Sensors

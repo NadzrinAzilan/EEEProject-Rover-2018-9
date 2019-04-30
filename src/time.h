@@ -9,9 +9,9 @@ void unregisterTimer(unsigned char, bool);
 void unregisterTimer(unsigned int);
 void blockMicro(unsigned long);
 void blockMili(unsigned long);
-void timerISR();
-void timer2ISR();
-unsigned long micro();
+
+const unsigned long MICROSECONDS = 1000000;
+const unsigned long MILISECONDS = 1000;
 
 #endif
 

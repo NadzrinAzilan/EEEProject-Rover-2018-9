@@ -3,6 +3,7 @@
 #include "comms.h"
 #include "actuators.h"
 #include "debug.h"
+#include "sensor_movement.h"
 
 void setup(){
     blockMili(1000);
@@ -12,8 +13,9 @@ void setup(){
     setupTimer();
     setup_PWM();
     setupSensors();
+    setupSensorMotor();
     if(setupWiFi()) setupHTTPServer();
-    else blinkLedError(); //Infinite LED blink loop. Require reset button to be pressed/restart Arduino.
+    else blinkLedError(); /* Infinite LED blink loop. Require reset button to be pressed/restart Arduino. */
     
     Logln("\nStart listening.\n");
 }

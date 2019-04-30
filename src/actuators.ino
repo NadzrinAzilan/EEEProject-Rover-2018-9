@@ -1,3 +1,4 @@
+#include "pin.h"
 #include "actuators.h"
 #include "joystick.h"
 

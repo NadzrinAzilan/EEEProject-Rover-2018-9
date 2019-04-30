@@ -11,21 +11,15 @@ unsigned long _micro = 0ul;
 /* End Global Variable */
 
 void setupTimer(){
-    //Set up TIMER0 interrupt
+    /* Set up any important callback if any */
 }
 
-/// Check all timer for expiry
+/* Check all timer for expiry */
 void timerISR() {
     for(unsigned char i = 0; i < TIMER_NUMBER; i++)
         if(timer_id_t[i])
             if(micros() - timer_value[i] >= timer_period[i]) unregisterTimer(i);
 }
-
-void timer2ISR(){
-    _micro++;
-}
-
-unsigned long micro(){return _micro;}
 
 void blockMili(unsigned long x){
     unsigned long timeElapsed = micros();
@@ -76,11 +70,11 @@ unsigned char registerTimerWithCallback(unsigned long x, void(*callback)(), bool
     return id;
 }
 
-///    x   : period of the timer in us
-/// Return : the ID of the timer
+/*    x   : period of the timer in us
+   Return : the ID of the timer        */
 unsigned char registerTimer(unsigned long x){
     unsigned char id = getID();
-    if(id == 255u) //All timer are registered
+    if(id == 255u) /* All timer are registered */
         return 255u;
     
     timer_id_t[id] = true;

@@ -30,6 +30,8 @@ enum COMMANDS_LIST : unsigned int{
     CHANGE_SPEED = 31,
     CHANGE_SPEED_ALL = 32,
     SET_DIRECTION = 33,
+    SENSOR_M_CW = 34,
+    SENSOR_M_CCW = 35,
 
     /* Sensors [41,60] */
     GET_MAGNETIC = 41,

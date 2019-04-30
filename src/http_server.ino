@@ -33,6 +33,8 @@ void setupHTTPServer(){
     mapToCommand['s'] = COMMANDS_LIST::MOVE_STOP_ALL;
     mapToCommand['c'] = COMMANDS_LIST::CHANGE_SPEED_ALL;
     mapToCommand['P'] = COMMANDS_LIST::SET_DIRECTION;
+    mapToCommand['R'] = COMMANDS_LIST::SENSOR_M_CW;
+    mapToCommand['C'] = COMMANDS_LIST::SENSOR_M_CCW;
 
     /* Sensors Command Code */
     mapToCommand['m'] = COMMANDS_LIST::GET_MAGNETIC;
