@@ -13,7 +13,8 @@ void setupSensors(){
 	pinMode(SENSOR_MAGNETIC_PIN_DOWN, INPUT_PULLUP);
 	pinMode(SENSOR_ACOUSTIC_PIN, INPUT_PULLUP);
 	pinMode(SENSOR_INFRARED_PIN, INPUT_PULLUP);
-	pinMode(SENSOR_RADIO_PIN, INPUT_PULLUP);
+	// pinMode(SENSOR_RADIO_PIN, INPUT_PULLUP);
+	pinMode(RADIO_FREQ_SEL_PIN, OUTPUT);
 }
 
 unsigned int readMagneticSensors(){
@@ -34,42 +35,40 @@ unsigned int readInfraredSensors(){
 }
 
 unsigned long readRadioSensors(){
-	//Don't want the rover to be moving when sampling
+	//Prevent rover from moving when sampling
 	wheel_stop(true, true);
 
-	unsigned long time_sample = 300000; //100'000 microseconds = 0.1 s
 	char c[4] = {0}; unsigned int i = 0;
 	digitalWrite(RADIO_FREQ_SEL_PIN,false);
 
+	//Set baud rate, and UART format (1 start bit, 8 bit data, no parity, 1 stop bit)
 	Serial.begin(UART_BPS, SERIAL_8N1);
-	blockMicro(10); //let everyhing settles down
+	while(!Serial) blockMicro(10); //Ensure port is completely initialised
 	while(Serial.available()) Serial.read(); //Clear buffer
 	unsigned long t = micros();
-	while(i < 4 && micros() - t < time_sample){
+	while(i < 4 && micros() - t < SAMPLING_TIME){
 		if(Serial.available())
 			c[i++] = Serial.read();
-		if(i==4) break;
 	}
 
-	if(i<4) {
+	if(i<4) { //choose another frequency if no letter found
 		digitalWrite(RADIO_FREQ_SEL_PIN,true);
 		c[0] = c[1] = c[2] = c[3] = i = 0; //Clear buffer
-		unsigned long t = micros();
-		while(micros() - t < time_sample){
+		t = micros();
+		while(i < 4 && micros() - t < SAMPLING_TIME){
 			if(Serial.available())
-			c[i++] = Serial.read();
-			if(i==4) break;
+				c[i++] = Serial.read();
 		}
 	}
 
 	//reset everything to default
-	digitalWrite(RADIO_FREQ_SEL_PIN,false);
+	digitalWrite(RADIO_FREQ_SEL_PIN, false);
 
 	//close Serial
 	Serial.end();
 
 	//return the results (can be '\0' if nothing detected)
-	//format of output is 4 characters in base 256
+	//format of output is 4 characters in base 256 (2^8)
 	return sensor_radio = c[0]+c[1]*(256ul)+c[2]*(256ul*256ul)+c[3]*(256ul*256ul*256ul);
 }
 
