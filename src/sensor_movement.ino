@@ -18,11 +18,11 @@ inline void sensor_m_ccw(){
 }
 
 void sensor_m_move(bool direction){
-    if(sensor_callback_id > 0) unregisterTimer(sensor_callback_id);
+    if(sensor_callback_id > 0) sensor_m_stop();
     else {
         sensor_callback_id = registerTimerWithCallback(1*MICROSECONDS, sensor_m_stop, false);
         /* digitalWrite(SENSOR_MOTOR_DIR_PIN, direction); */ /* Not enough pin :( */
-        diigtalWrite(SENSOR_MOTOR_PWM_PIN, true);
+        digitalWrite(SENSOR_MOTOR_PWM_PIN, HIGH);
     }
 }
 
@@ -32,6 +32,6 @@ void sensor_m_stop(){
         sensor_callback_id = 0;
     }
     
-    digitalWrite(SENSOR_MOTOR_DIR_PIN, false);
-    digitalWrite(SENSOR_MOTOR_PWM_PIN, false);
+    digitalWrite(SENSOR_MOTOR_DIR_PIN, LOW);
+    digitalWrite(SENSOR_MOTOR_PWM_PIN, LOW);
 }

@@ -26,11 +26,11 @@ inline unsigned int scale_wheel_speed(unsigned int x){
 	return scale(x, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE);
 }
 void set_wheel_direction(WHEEL_SIDE w, WHEEL_DIRECTION state){
-	digitalWrite(GetWheelDir(w), state);
+	digitalWrite(GetWheelDir(w), HL(state));
 }
 void set_wheel_direction(WHEEL_DIRECTION left, WHEEL_DIRECTION right){
-	digitalWrite(GetWheelDir(WHEEL_SIDE::LEFT) , left );
-	digitalWrite(GetWheelDir(WHEEL_SIDE::RIGHT), right);
+	digitalWrite(GetWheelDir(WHEEL_SIDE::LEFT) , HL(left) );
+	digitalWrite(GetWheelDir(WHEEL_SIDE::RIGHT), HL(right));
 }
 void wheel_move(WHEEL_SIDE w){
 	wheel_move(w==WHEEL_SIDE::LEFT, w==WHEEL_SIDE::RIGHT);

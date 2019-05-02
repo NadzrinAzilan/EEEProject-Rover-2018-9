@@ -16,9 +16,9 @@ unsigned int getWIFI_ID(){
     else if(analogRead(WIFI_SELECT2_PIN) > 1000) res = 1;
 
     for(int j = 0; j < 2*res; j++){
-        digitalWrite(LED_PIN,true);
+        digitalWrite(LED_PIN,HIGH);
         blockMili(100);
-        digitalWrite(LED_PIN,false);
+        digitalWrite(LED_PIN,LOW);
         blockMili(100);
     }
     
@@ -40,17 +40,17 @@ void shineLED(unsigned int i){
     while(i!=0){
         flag = i % 2;
         i /= 2;
-        digitalWrite(LED_PIN,true);
+        digitalWrite(LED_PIN,HIGH);
         blockMili(200);
-        digitalWrite(LED_PIN,false);
+        digitalWrite(LED_PIN,LOW);
         blockMili(200);
-        digitalWrite(LED_PIN,flag);
+        digitalWrite(LED_PIN,HL(flag));
         blockMili(100);
-        digitalWrite(LED_PIN,false);
+        digitalWrite(LED_PIN,LOW);
         blockMili(100);
-        digitalWrite(LED_PIN,true);
+        digitalWrite(LED_PIN,HIGH);
         blockMili(200);
-        digitalWrite(LED_PIN,false);
+        digitalWrite(LED_PIN,LOW);
         blockMili(200);
     }
 }

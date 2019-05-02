@@ -1,6 +1,8 @@
 #ifndef PIN_H
 #define PIN_H
 
+#define HL(x) x?HIGH:LOW
+
 const unsigned char MOTOR_2_PWM_PIN = 3; /* left motor */
 const unsigned char MOTOR_2_DIR_PIN = 2;
 const unsigned char MOTOR_1_PWM_PIN = 9; /* right motor */
@@ -19,7 +21,7 @@ const unsigned char SENSOR_INFRARED_PIN = A3;
 const unsigned char WIFI_SELECT1_PIN = A4;
 const unsigned char WIFI_SELECT2_PIN = A5;
 
-const unsigned char LED_PIN = 13;
+const unsigned char LED_PIN = LED_BUILTIN;
 
 //do not use these pins
 const unsigned char WIFI_HANDSHAKE = 7;
