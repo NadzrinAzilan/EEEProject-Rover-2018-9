@@ -75,6 +75,7 @@ void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned i
             sendToClient(client, tmp);
             break;
         case COMMANDS_LIST::CHANGE_SPEED_ALL:
+        Serial.println((unsigned int)atoi(args));
             wheel_change_speed((unsigned int)atoi(args), (unsigned int)atoi(args));
             sendToClient(client, tmp);
             break;
@@ -117,4 +118,3 @@ void ExecuteACommand(WiFiClient* client, COMMANDS_LIST c, char* args, unsigned i
       			break;
     }
 }
-

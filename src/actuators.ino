@@ -33,13 +33,18 @@ void set_wheel_direction(WHEEL_DIRECTION left, WHEEL_DIRECTION right){
 	digitalWrite(GetWheelDir(WHEEL_SIDE::RIGHT), HL(right));
 }
 void wheel_move(WHEEL_SIDE w){
-	wheel_move(w==WHEEL_SIDE::LEFT, w==WHEEL_SIDE::RIGHT);
+	isMovingWheel[WHEEL_SIDE::LEFT ] = w==WHEEL_SIDE::LEFT ;
+	isMovingWheel[WHEEL_SIDE::RIGHT] = w==WHEEL_SIDE::RIGHT;
+	wheel_move();
 }
 void wheel_move(bool left, bool right){
 	isMovingWheel[WHEEL_SIDE::LEFT]  = left;
 	isMovingWheel[WHEEL_SIDE::RIGHT] = right;
-	if(left)  analogWrite(GetWheel(WHEEL_SIDE::LEFT) , scale_wheel_speed(GetSpeed(WHEEL_SIDE::LEFT) ));
-	if(right) analogWrite(GetWheel(WHEEL_SIDE::RIGHT), scale_wheel_speed(GetSpeed(WHEEL_SIDE::RIGHT)));
+	wheel_move();
+}
+void wheel_move(){
+	analogWrite(GetWheel(WHEEL_SIDE::LEFT) , isMovingWheel[WHEEL_SIDE::LEFT ]?scale_wheel_speed(GetSpeed(WHEEL_SIDE::LEFT) ):0);
+	analogWrite(GetWheel(WHEEL_SIDE::RIGHT), isMovingWheel[WHEEL_SIDE::RIGHT]?scale_wheel_speed(GetSpeed(WHEEL_SIDE::RIGHT)):0);
 }
 
 
@@ -72,24 +77,22 @@ void wheel_move_stop_callback(){
   stopWheel[0] = stopWheel[1] = false;
 }
 void wheel_change_speed(unsigned int xl, unsigned int xr){
-	xl = scale(xl, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE + 1);
-	xr = scale(xr, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE + 1);
-	
+	xl = scale(xl, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE);
+	xr = scale(xr, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE);
 	/*
-		x now ranges from LOW_SPEED_PWM_VALUE to HIGH_SPEED_PWM_VALUE + 1
+		x now ranges from LOW_SPEED_PWM_VALUE to HIGH_SPEED_PWM_VALUE
 		LOW_SPEED_PWM_VALUE to HIGH_SPEED_PWM_VALUE  : change the speed to this new value
 		HIGH_SPEED_PWM_VALUE + 1                     : do not change the current speed
 	*/
 
 	/* Assign speed to the wheel */
-	if(xl <= HIGH_SPEED_PWM_VALUE) GetSpeed(WHEEL_SIDE::LEFT)  = xl;
-	if(xr <= HIGH_SPEED_PWM_VALUE) GetSpeed(WHEEL_SIDE::RIGHT) = xr;
+	GetSpeed(WHEEL_SIDE::LEFT ) = xl;
+	GetSpeed(WHEEL_SIDE::RIGHT) = xr;
 
-	wheel_move(isMovingWheel[WHEEL_SIDE::LEFT], isMovingWheel[WHEEL_SIDE::RIGHT]);
+	wheel_move();
 }
 
 /* Functions related to joystick operation */
-
 void wheel_joystick(unsigned long n){
 	int x_dir = (n/10000000)    >0 ?-1:1,
 		y_dir = (n/1000000 )%10 >0 ?-1:1;
@@ -129,13 +132,7 @@ void wheel_stop(WHEEL_SIDE w){
 	wheel_stop(w==WHEEL_SIDE::LEFT, w==WHEEL_SIDE::RIGHT);
 }
 void wheel_stop(bool left, bool right){
-	if(left){
-		isMovingWheel[WHEEL_SIDE::LEFT] = false;
-		wheel_move(WHEEL_SIDE::LEFT,LOW_SPEED_PWM_VALUE);
-	}
-	if(right){
-		isMovingWheel[WHEEL_SIDE::RIGHT] = false;
-		wheel_move(WHEEL_SIDE::LEFT,LOW_SPEED_PWM_VALUE);
-	}
+	isMovingWheel[WHEEL_SIDE::LEFT ] = !left;
+	isMovingWheel[WHEEL_SIDE::RIGHT] = !right;
+	wheel_move();
 }
-

@@ -2,8 +2,8 @@
 #define ACTUATORS_H
 
 /* Utility function */
-template<typename T> static inline T scale(T in, T MIN_IN, T MAX_IN, T MIN_OUT, T MAX_OUT) {
-	return (((in-MIN_IN)%(MAX_IN-MIN_IN+1))/(MAX_IN-MIN_IN))*(MAX_OUT-MIN_OUT) + MIN_OUT;
+template<class T> static inline T scale(T in, T MIN_IN, T MAX_IN, T MIN_OUT, T MAX_OUT) {
+  return (((in-MIN_IN)%(MAX_IN-MIN_IN+1))*(MAX_OUT-MIN_OUT)/(MAX_IN-MIN_IN)) + MIN_OUT;
 }
 
 /* range of values from the input */
@@ -35,4 +35,3 @@ void wheel_stop(WHEEL_SIDE);
 void wheel_stop(bool, bool);
 
 #endif
-

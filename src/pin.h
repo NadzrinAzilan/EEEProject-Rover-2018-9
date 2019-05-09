@@ -10,7 +10,7 @@ const unsigned char MOTOR_1_DIR_PIN = 8;
 const unsigned char SENSOR_MOTOR_PWM_PIN = 6; /* sensor movement */
 const unsigned char SENSOR_MOTOR_DIR_PIN = 6;
 
-const unsigned char RADIO_FREQ_SEL_PIN = 5;
+const unsigned char RADIO_FREQ_SEL_PIN = 6;
 
 const unsigned char SENSOR_MAGNETIC_PIN_UP = A0;
 const unsigned char SENSOR_MAGNETIC_PIN_DOWN = A1;
@@ -25,13 +25,13 @@ const unsigned char LED_PIN = LED_BUILTIN;
 
 //do not use these pins
 const unsigned char WIFI_HANDSHAKE = 7;
-const unsigned char WIFI_SPI1 = 11;
-const unsigned char WIFI_SPI2 = 12;
-const unsigned char WIFI_SPI3 = 13;
-const unsigned char WIFI_HDG204_SS = 4;
-const unsigned char WIFI_SD_SS = 10;
+const unsigned char WIFI_MOSI = 11;
+const unsigned char WIFI_MISO = 12;
+const unsigned char WIFI_CLK = 13;
+const unsigned char WIFI_SD_SS = 4;
+const unsigned char WIFI_SS = 10;
+const unsigned char WIFI_RST = 5;
 const unsigned char UART_RX = 0;
 const unsigned char UART_TX = 1;
 
 #endif
-

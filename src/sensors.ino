@@ -41,14 +41,18 @@ unsigned long readRadioSensors(){
 	char c[4] = {0}; unsigned int i = 0;
 	digitalWrite(RADIO_FREQ_SEL_PIN,LOW);
 
+	/* Close existing Serial connection and wait until everything settle down */
+ 	if(Serial) Serial.end();
+	blockMili(10);
+
 	/* Set baud rate, and UART format (1 start bit, 8 bit data, no parity, 1 stop bit) */
-	Serial1.begin(UART_BPS, SERIAL_8N1);
-	while(!Serial1) blockMicro(10); /* Ensure port is completely initialised */
-	while(Serial1.available()) Serial1.read(); /* Clear buffer */
+	Serial.begin(UART_BPS, SERIAL_8N1);
+	while(!Serial) blockMicro(100); /* Ensure port is completely initialised */
+	while(Serial.available()) Serial.read(); /* Clear buffer */
 	unsigned long t = micros();
 	while(i < 4 && micros() - t < SAMPLING_TIME){
-		if(Serial1.available())
-			c[i++] = Serial1.read();
+		if(Serial.available())
+			c[i++] = Serial.read();
 	}
 
 	if(i<4) { /* choose another frequency if no letter found */
@@ -56,8 +60,8 @@ unsigned long readRadioSensors(){
 		c[0] = c[1] = c[2] = c[3] = i = 0; /* Clear buffer */
 		t = micros();
 		while(i < 4 && micros() - t < SAMPLING_TIME){
-			if(Serial1.available())
-				c[i++] = Serial1.read();
+			if(Serial.available())
+				c[i++] = Serial.read();
 		}
 	}
 
@@ -65,10 +69,9 @@ unsigned long readRadioSensors(){
 	digitalWrite(RADIO_FREQ_SEL_PIN, LOW);
 
 	/* close Serial */
-	Serial1.end();
+	Serial.end();
 
 	/*return the results (can be '\0' if nothing detected)
 	  format of output is 4 characters in base 256 (2^8) */
 	return sensor_radio = c[0]+c[1]*(256ul)+c[2]*(256ul*256ul)+c[3]*(256ul*256ul*256ul);
 }
-
