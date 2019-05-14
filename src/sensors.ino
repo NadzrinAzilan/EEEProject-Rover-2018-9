@@ -21,7 +21,7 @@ unsigned int readMagneticSensors(){
 	return sensor_magnetic = (analogRead(SENSOR_MAGNETIC_PIN_UP)>1000?1:0)*2 + (analogRead(SENSOR_MAGNETIC_PIN_DOWN)>1000?1:0);
 }
 unsigned int readAcousticSensors(){
-	return sensor_acoustic = analogRead(SENSOR_ACOUSTIC_PIN)>1000?1:0;
+	return sensor_acoustic = analogRead(SENSOR_ACOUSTIC_PIN)>ACOUSTIC_THRESHOLD_VALUE?1:0;
 }
 
 unsigned int readInfraredSensors(){
@@ -40,19 +40,19 @@ unsigned long readRadioSensors(){
 
 	char c[4] = {0}; unsigned int i = 0;
 	digitalWrite(RADIO_FREQ_SEL_PIN,LOW);
-
+ 
 	/* Close existing Serial connection and wait until everything settle down */
- 	if(Serial) Serial.end();
+ 	if(SERIAL) SERIAL.end();
 	blockMili(10);
 
 	/* Set baud rate, and UART format (1 start bit, 8 bit data, no parity, 1 stop bit) */
-	Serial.begin(UART_BPS, SERIAL_8N1);
-	while(!Serial) blockMicro(100); /* Ensure port is completely initialised */
-	while(Serial.available()) Serial.read(); /* Clear buffer */
+	SERIAL.begin(UART_BPS, SERIAL_8N1);
+	while(!SERIAL) blockMicro(100); /* Ensure port is completely initialised */
+	while(SERIAL.available()) SERIAL.read(); /* Clear buffer */
 	unsigned long t = micros();
 	while(i < 4 && micros() - t < SAMPLING_TIME){
-		if(Serial.available())
-			c[i++] = Serial.read();
+		if(SERIAL.available())
+			c[i++] = SERIAL.read();
 	}
 
 	if(i<4) { /* choose another frequency if no letter found */
@@ -60,8 +60,8 @@ unsigned long readRadioSensors(){
 		c[0] = c[1] = c[2] = c[3] = i = 0; /* Clear buffer */
 		t = micros();
 		while(i < 4 && micros() - t < SAMPLING_TIME){
-			if(Serial.available())
-				c[i++] = Serial.read();
+			if(SERIAL.available())
+				c[i++] = SERIAL.read();
 		}
 	}
 
@@ -69,7 +69,7 @@ unsigned long readRadioSensors(){
 	digitalWrite(RADIO_FREQ_SEL_PIN, LOW);
 
 	/* close Serial */
-	Serial.end();
+	SERIAL.end();
 
 	/*return the results (can be '\0' if nothing detected)
 	  format of output is 4 characters in base 256 (2^8) */

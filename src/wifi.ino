@@ -145,4 +145,3 @@ unsigned int sendToClient(WiFiClient* client, const char text[], unsigned int n)
 unsigned int sendToClient(WiFiClient* client, String s){
 	  return client->write(s.c_str(),s.length());
 }
-

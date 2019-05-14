@@ -18,8 +18,6 @@ void setup(){
     //setupSensorMotor();
     if(setupWiFi()) setupHTTPServer();
     else blinkLedError(); /* Infinite LED blink loop. Require reset button to be pressed/restart Arduino. */
-    //blinkLedError();
-    
     Logln("\nStart listening.\n");
 }
 

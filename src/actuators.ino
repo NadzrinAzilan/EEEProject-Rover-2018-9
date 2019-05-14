@@ -33,8 +33,8 @@ void set_wheel_direction(WHEEL_DIRECTION left, WHEEL_DIRECTION right){
 	digitalWrite(GetWheelDir(WHEEL_SIDE::RIGHT), HL(right));
 }
 void wheel_move(WHEEL_SIDE w){
-	isMovingWheel[WHEEL_SIDE::LEFT ] = w==WHEEL_SIDE::LEFT ;
-	isMovingWheel[WHEEL_SIDE::RIGHT] = w==WHEEL_SIDE::RIGHT;
+	isMovingWheel[WHEEL_SIDE::LEFT ] |= w==WHEEL_SIDE::LEFT ;
+	isMovingWheel[WHEEL_SIDE::RIGHT] |= w==WHEEL_SIDE::RIGHT;
 	wheel_move();
 }
 void wheel_move(bool left, bool right){
@@ -77,8 +77,8 @@ void wheel_move_stop_callback(){
   stopWheel[0] = stopWheel[1] = false;
 }
 void wheel_change_speed(unsigned int xl, unsigned int xr){
-	xl = scale(xl, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE);
-	xr = scale(xr, MIN_INPUT_VALUE, MAX_INPUT_VALUE, LOW_SPEED_PWM_VALUE, HIGH_SPEED_PWM_VALUE);
+	xl = scale_wheel_speed(xl);
+	xr = scale_wheel_speed(xr);
 	/*
 		x now ranges from LOW_SPEED_PWM_VALUE to HIGH_SPEED_PWM_VALUE
 		LOW_SPEED_PWM_VALUE to HIGH_SPEED_PWM_VALUE  : change the speed to this new value
@@ -119,8 +119,7 @@ void wheel_joystick(unsigned long n){
 	/* Chenge the direction and speed to new values */
 	set_wheel_direction(WHEEL_SIDE::LEFT, l_dir);
 	set_wheel_direction(WHEEL_SIDE::RIGHT, r_dir);
-	wheel_change_speed(WHEEL_SIDE::LEFT, l);
-	wheel_change_speed(WHEEL_SIDE::RIGHT, r);
+	wheel_change_speed(l, r);
 	
 	/* Move the wheels as with the new speed */
 	wheel_move(true, true);
